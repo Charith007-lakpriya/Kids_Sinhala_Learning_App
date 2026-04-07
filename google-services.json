@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "420412328142",
+    "project_id": "walipilla-71ec6",
+    "storage_bucket": "walipilla-71ec6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420412328142:android:c49a6b184aa130d927a89f",
+        "android_client_info": {
+          "package_name": "com.example.valipilla"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWDXdGsLeMXvIneVRwrbU9KMmLZwkyBp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
