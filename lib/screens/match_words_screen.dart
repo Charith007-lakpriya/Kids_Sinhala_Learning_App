@@ -60,3 +60,55 @@ class _MatchWordsGameState extends State<_MatchWordsGame> {
       _orderIndex = 0;
     });
   }
+ void _pick(String emoji) {
+    if (_isLocked || _items.isEmpty) return;
+    final current = _items[_order[_orderIndex]];
+
+    if (emoji == current.emoji) {
+      setState(() {
+        _score += 1;
+        _feedback = 'Good Job!';
+        _isLocked = true;
+        _showStar = true;
+      });
+
+      final userId = Session.currentUserId ?? 'demo';
+      SoundService.playCorrect();
+      FirestoreService.addStars(userId: userId, delta: 1);
+      FirestoreService.addCorrectAnswer(userId: userId, delta: 1);
+      FirestoreService.updateLevelForStars(userId: userId).then((leveled) {
+        if (leveled) {
+          SoundService.playLevelUp();
+        }
+      });
+      FirestoreService.setLastPlayedWord(userId: userId, word: current.word);
+
+      Future.delayed(const Duration(milliseconds: 700), () {
+        if (!mounted) return;
+        setState(() => _showStar = false);
+      });
+
+      Future.delayed(const Duration(milliseconds: 850), () {
+        if (!mounted) return;
+        _next();
+      });
+    } else {
+      SoundService.playWrong();
+      setState(() {
+        _feedback = 'Try again';
+      });
+    }
+  }
+
+  void _next() {
+    setState(() {
+      _feedback = null;
+      _isLocked = false;
+      if (_orderIndex < _order.length - 1) {
+        _orderIndex += 1;
+      } else {
+        _orderIndex = 0;
+        _order.shuffle();
+      }
+    });
+  }
