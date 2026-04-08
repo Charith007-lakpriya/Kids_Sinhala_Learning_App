@@ -483,7 +483,7 @@ class _ProfileHeroCard extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'Level $level · $stars Stars',
+                'Level $level ï¿½ $stars Stars',
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.92),
                   fontWeight: FontWeight.w700,
@@ -653,8 +653,3 @@ class _GoalRow extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
