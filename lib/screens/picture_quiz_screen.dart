@@ -317,6 +317,135 @@ class _SectionBadge extends StatelessWidget {
   }
 }
 
+class _QuizStats extends StatelessWidget {
+  final int score;
+  final String? feedback;
+  final int questionNumber;
+  final int total;
+
+  const _QuizStats({
+    required this.score,
+    required this.feedback,
+    required this.questionNumber,
+    required this.total,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final message = feedback ?? 'Keep going';
+    final messageColor = feedback == 'Good Job!'
+        ? const Color(0xFF25A85C)
+        : feedback == 'Try again'
+            ? const Color(0xFFE46E40)
+            : const Color(0xFF3A5A8F);
+
+    return Row(
+      children: [
+        Expanded(
+          child: _StatTile(
+            color: const Color(0xFFEAF7FF),
+            borderColor: const Color(0xFF9FD2FF),
+            title: 'Score',
+            value: '$score',
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _StatTile(
+            color: const Color(0xFFFFF3D8),
+            borderColor: const Color(0xFFFFD470),
+            title: 'Quiz',
+            value: '$questionNumber/$total',
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8EEFF),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFD8B4FF), width: 1.4),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Status',
+                  style: TextStyle(
+                    color: AppTheme.textMuted,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  message,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: messageColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  final Color color;
+  final Color borderColor;
+  final String title;
+  final String value;
+
+  const _StatTile({
+    required this.color,
+    required this.borderColor,
+    required this.title,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: borderColor, width: 1.4),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: AppTheme.textMuted,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Color(0xFF183B74),
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _QuizItem {
   final String picture;
   final String prompt;
