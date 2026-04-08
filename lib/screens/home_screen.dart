@@ -406,6 +406,227 @@ class _StatPill extends StatelessWidget {
   }
 }
 
+class _GameAdventureButton extends StatelessWidget {
+  final _GameCardData game;
+
+  const _GameAdventureButton({required this.game});
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.98, end: 1),
+      duration: const Duration(milliseconds: 380),
+      curve: Curves.easeOutBack,
+      builder: (context, value, child) {
+        return Transform.scale(scale: value, child: child);
+      },
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () => Navigator.pushNamed(context, game.route),
+          child: Ink(
+            decoration: BoxDecoration(
+              gradient: game.gradient,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: game.accent.withOpacity(0.24),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -8,
+                  right: -8,
+                  child: Container(
+                    width: 82,
+                    height: 82,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.14),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: -12,
+                  right: 24,
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.16),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              game.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                height: 1,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              game.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.94),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Text(
+                                'Play Now',
+                                style: TextStyle(
+                                  color: game.accent,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: 118,
+                            height: 118,
+                            child: Center(
+                              child: _GameIcon(
+                                type: game.type,
+                                icon: game.icon,
+                                size: 104,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(
+                              3,
+                              (index) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 3),
+                                child: _MiniShape(
+                                  color: index.isEven
+                                      ? Colors.white
+                                      : game.softColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MiniShape extends StatelessWidget {
+  final Color color;
+
+  const _MiniShape({required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: 0.35,
+      child: Container(
+        width: 12,
+        height: 12,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+    );
+  }
+}
+
+class _GameIcon extends StatelessWidget {
+  final String type;
+  final String icon;
+  final double size;
+
+  const _GameIcon({
+    required this.type,
+    required this.icon,
+    required this.size,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (type == 'match') {
+      return Image.asset(
+        'assets/icons/games/match words aliya new.png',
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+      );
+    }
+
+    if (type == 'trace') {
+      return Image.asset(
+        'assets/icons/games/letter tracing icon.png',
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+      );
+    }
+
+    if (type == 'quiz') {
+      return Image.asset(
+        'assets/icons/games/picture quiz icon.png',
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+      );
+    }
+
+    return Text(
+      icon,
+      style: TextStyle(fontSize: size * 0.72),
+    );
+  }
+}
+
 class _GameCardData {
   final String title;
   final String description;
