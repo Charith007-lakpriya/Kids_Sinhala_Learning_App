@@ -60,7 +60,7 @@ class WelcomeScreen extends StatelessWidget {
                             fontSize: 17,
                             fontWeight: FontWeight.w800,
                           ),
-                        ),
+                        ),//welcome screen
                       ),
                     ),
                   ],
