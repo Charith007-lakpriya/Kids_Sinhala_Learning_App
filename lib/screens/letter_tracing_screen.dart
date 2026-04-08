@@ -69,3 +69,33 @@ class _LetterTracingScreenState extends State<LetterTracingScreen> {
       }
     });
   }
+ Future<void> _handleTraceEnd(Size size) async {
+    if (_busy || _completed) return;
+    final tracedPoints = _points.whereType<Offset>().toList();
+    if (tracedPoints.length < 18) return;
+
+    final xs = tracedPoints.map((p) => p.dx).toList();
+    final ys = tracedPoints.map((p) => p.dy).toList();
+    final width = xs.reduce(math.max) - xs.reduce(math.min);
+    final height = ys.reduce(math.max) - ys.reduce(math.min);
+
+    double pathLength = 0;
+    for (var i = 1; i < _points.length; i++) {
+      final a = _points[i - 1];
+      final b = _points[i];
+      if (a != null && b != null) {
+        pathLength += (b - a).distance;
+      }
+    }
+
+    final tracedEnough =
+        width > size.width * 0.18 &&
+        height > size.height * 0.18 &&
+        pathLength > size.width * 0.55;
+
+    if (!tracedEnough) return;
+
+    setState(() {
+      _completed = true;
+      _busy = true;
+    });
