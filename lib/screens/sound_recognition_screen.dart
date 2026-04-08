@@ -107,3 +107,61 @@ class SoundRecognitionScreen extends StatelessWidget {
     );
   }
 }
+class _AnimatedChip extends StatefulWidget {
+  final String label;
+  final List<Color> colors;
+  final int delayMs;
+
+  const _AnimatedChip({
+    required this.label,
+    required this.colors,
+    required this.delayMs,
+  });
+
+  @override
+  State<_AnimatedChip> createState() => _AnimatedChipState();
+}
+
+class _AnimatedChipState extends State<_AnimatedChip> {
+  double _opacity = 0;
+  double _scale = 0.9;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(milliseconds: widget.delayMs), () {
+      if (!mounted) return;
+      setState(() {
+        _opacity = 1;
+        _scale = 1;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      opacity: _opacity,
+      duration: const Duration(milliseconds: 300),
+      child: AnimatedScale(
+        scale: _scale,
+        duration: const Duration(milliseconds: 300),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: widget.colors),
+            borderRadius: BorderRadius.circular(999),
+          ),
+          child: Text(
+            widget.label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
