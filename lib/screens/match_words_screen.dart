@@ -60,8 +60,7 @@ class _MatchWordsGameState extends State<_MatchWordsGame> {
       _orderIndex = 0;
     });
   }
-
-  void _pick(String emoji) {
+ void _pick(String emoji) {
     if (_isLocked || _items.isEmpty) return;
     final current = _items[_order[_orderIndex]];
 
@@ -113,8 +112,7 @@ class _MatchWordsGameState extends State<_MatchWordsGame> {
       }
     });
   }
-
-  @override
+ @override
   Widget build(BuildContext context) {
     final hasItems = _items.isNotEmpty;
     final current = hasItems ? _items[_order[_orderIndex]] : null;
@@ -235,7 +233,6 @@ class _MatchWordsGameState extends State<_MatchWordsGame> {
     ]..shuffle();
   }
 }
-
 class _MatchHeroCard extends StatelessWidget {
   const _MatchHeroCard();
 

@@ -66,6 +66,21 @@ class GamesScreen extends StatelessWidget {
                 );
               }).toList();
 
+              if (!games.any((game) => game.type == 'sound')) {
+                games.add(
+                  _GameCardData(
+                    title: 'Sound Word Match',
+                    description: 'Play a sound and choose the matching word',
+                    icon: _emojiForType('sound'),
+                    type: 'sound',
+                    difficulty: '1',
+                    gradient: _gradientForType('sound'),
+                    accent: _accentForType('sound'),
+                    softColor: _softColorForType('sound'),
+                  ),
+                );
+              }
+
               return SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(18, 16, 18, 20),
                 child: Column(

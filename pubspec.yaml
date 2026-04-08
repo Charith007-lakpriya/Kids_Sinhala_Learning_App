@@ -27,5 +27,6 @@ flutter:
     - assets/audio/correct.wav
     - assets/audio/wrong.wav
     - assets/audio/level_up.wav
+    - assets/audio/sound_recognition/
     - assets/icons/games/
     - assets/avatars/

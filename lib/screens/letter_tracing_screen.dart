@@ -52,8 +52,7 @@ class _LetterTracingScreenState extends State<LetterTracingScreen> {
     super.initState();
     _shuffledLetters = List<String>.from(_letters)..shuffle(_random);
   }
-
-  void _clearTrace() {
+ void _clearTrace() {
     setState(() {
       _points.clear();
       _completed = false;
@@ -70,8 +69,7 @@ class _LetterTracingScreenState extends State<LetterTracingScreen> {
       }
     });
   }
-
-  Future<void> _handleTraceEnd(Size size) async {
+ Future<void> _handleTraceEnd(Size size) async {
     if (_busy || _completed) return;
     final tracedPoints = _points.whereType<Offset>().toList();
     if (tracedPoints.length < 18) return;
@@ -101,8 +99,7 @@ class _LetterTracingScreenState extends State<LetterTracingScreen> {
       _completed = true;
       _busy = true;
     });
-
-    SoundService.playCorrect();
+SoundService.playCorrect();
     final userId = Session.currentUserId;
     if (userId != null) {
       await FirestoreService.addStars(userId: userId, delta: 1);
@@ -154,8 +151,7 @@ class _LetterTracingScreenState extends State<LetterTracingScreen> {
     _nextLetter();
     setState(() => _busy = false);
   }
-
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -319,7 +315,6 @@ class _LetterTracingScreenState extends State<LetterTracingScreen> {
     );
   }
 }
-
 class _TracingHeroCard extends StatelessWidget {
   const _TracingHeroCard();
 
@@ -518,7 +513,6 @@ class _StatTile extends StatelessWidget {
     );
   }
 }
-
 class _TracingBoardPainter extends CustomPainter {
   final String letter;
   final List<Offset?> points;
