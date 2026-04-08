@@ -99,3 +99,55 @@ class _LetterTracingScreenState extends State<LetterTracingScreen> {
       _completed = true;
       _busy = true;
     });
+SoundService.playCorrect();
+    final userId = Session.currentUserId;
+    if (userId != null) {
+      await FirestoreService.addStars(userId: userId, delta: 1);
+      await FirestoreService.addCorrectAnswer(userId: userId, delta: 1);
+      final leveled = await FirestoreService.updateLevelForStars(userId: userId);
+      if (leveled) {
+        SoundService.playLevelUp();
+      }
+      await FirestoreService.setLastPlayedWord(userId: userId, word: _currentLetter);
+    }
+
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          title: const Text(
+            'Good Job!',
+            style: TextStyle(
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF183B74),
+            ),
+          ),
+          content: Text(
+            'You traced $_currentLetter correctly and earned 1 star.',
+            style: const TextStyle(
+              color: AppTheme.textPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                'Next Letter',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (!mounted) return;
+    _nextLetter();
+    setState(() => _busy = false);
+  }
