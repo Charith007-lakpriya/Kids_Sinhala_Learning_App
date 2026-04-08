@@ -52,6 +52,14 @@ class FirestoreService {
       'difficulty': 2,
     });
 
+    batch.set(gamesRef.doc('sound_word_match'), {
+      'title': 'Sound Word Match',
+      'description': 'Play a sound and choose the matching word',
+      'type': 'sound',
+      'icon': '🎵',
+      'difficulty': 1,
+    });
+
     final progressRef = _db
         .collection('users')
         .doc(resolvedUserId)
