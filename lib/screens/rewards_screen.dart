@@ -400,6 +400,51 @@ class _MiniShape extends StatelessWidget {
   }
 }
 
+LinearGradient _gradientForStatus(String status) {
+  switch (status.toLowerCase()) {
+    case 'unlocked':
+      return const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color(0xFF67C76A), Color(0xFF3CA86A)],
+      );
+    case 'claimed':
+      return const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color(0xFF8C6BFF), Color(0xFF5A47E5)],
+      );
+    default:
+      return const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color(0xFFFFB347), Color(0xFFFF8A34)],
+      );
+  }
+}
+
+Color _accentForStatus(String status) {
+  switch (status.toLowerCase()) {
+    case 'unlocked':
+      return const Color(0xFF2F8F54);
+    case 'claimed':
+      return const Color(0xFF5642D8);
+    default:
+      return const Color(0xFFFF7A1A);
+  }
+}
+
+Color _softColorForStatus(String status) {
+  switch (status.toLowerCase()) {
+    case 'unlocked':
+      return const Color(0xFFEAF8E8);
+    case 'claimed':
+      return const Color(0xFFEDE8FF);
+    default:
+      return const Color(0xFFFFF0DA);
+  }
+}
+
 class _RewardCardData {
   final String title;
   final String status;
@@ -440,7 +485,60 @@ class _RewardCardData {
   Color get softColor => _softColorForStatus(status);
 }
 
-
-
-
-
+const List<_RewardCardData> _dummyLockedRewards = [
+  _RewardCardData(
+    title: 'Rainbow Badge',
+    status: 'locked',
+    stars: '12',
+    gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFFFB347), Color(0xFFFF8A34)],
+    ),
+    accent: Color(0xFFFF7A1A),
+  ),
+  _RewardCardData(
+    title: 'Super Star Crown',
+    status: 'locked',
+    stars: '18',
+    gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFFFB347), Color(0xFFFF8A34)],
+    ),
+    accent: Color(0xFFFF7A1A),
+  ),
+  _RewardCardData(
+    title: 'Magic Pencil Pack',
+    status: 'locked',
+    stars: '24',
+    gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFFFB347), Color(0xFFFF8A34)],
+    ),
+    accent: Color(0xFFFF7A1A),
+  ),
+  _RewardCardData(
+    title: 'Jungle Explorer',
+    status: 'locked',
+    stars: '30',
+    gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFFFB347), Color(0xFFFF8A34)],
+    ),
+    accent: Color(0xFFFF7A1A),
+  ),
+  _RewardCardData(
+    title: 'Treasure Chest',
+    status: 'locked',
+    stars: '40',
+    gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xFFFFB347), Color(0xFFFF8A34)],
+    ),
+    accent: Color(0xFFFF7A1A),
+  ),
+];
