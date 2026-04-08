@@ -513,3 +513,106 @@ class _StatTile extends StatelessWidget {
     );
   }
 }
+class _TracingBoardPainter extends CustomPainter {
+  final String letter;
+  final List<Offset?> points;
+  final bool completed;
+
+  const _TracingBoardPainter({
+    required this.letter,
+    required this.points,
+    required this.completed,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final background = Paint()..color = Colors.white;
+    canvas.drawRect(Offset.zero & size, background);
+
+    final guideRect = Offset.zero & size;
+    canvas.saveLayer(guideRect, Paint());
+
+    final dotsPaint = Paint()..color = const Color(0xFFB8C4DA);
+    const spacing = 12.0;
+    const radius = 2.2;
+    for (double y = spacing; y < size.height; y += spacing) {
+      for (double x = spacing; x < size.width; x += spacing) {
+        canvas.drawCircle(Offset(x, y), radius, dotsPaint);
+      }
+    }
+
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: letter,
+        style: TextStyle(
+          fontSize: size.shortestSide * 0.6,
+          fontWeight: FontWeight.w900,
+          foreground: Paint()
+            ..color = Colors.white
+            ..blendMode = BlendMode.dstIn,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final offset = Offset(
+      (size.width - textPainter.width) / 2,
+      (size.height - textPainter.height) / 2 - 8,
+    );
+    textPainter.paint(canvas, offset);
+    canvas.restore();
+
+    final outlinePainter = TextPainter(
+      text: TextSpan(
+        text: letter,
+        style: TextStyle(
+          fontSize: size.shortestSide * 0.6,
+          fontWeight: FontWeight.w900,
+          foreground: Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2.2
+            ..color = const Color(0xFFD3DCEB),
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    outlinePainter.paint(canvas, offset);
+
+    if (completed) {
+      final completedPainter = TextPainter(
+        text: TextSpan(
+          text: letter,
+          style: TextStyle(
+            fontSize: size.shortestSide * 0.6,
+            fontWeight: FontWeight.w900,
+            color: const Color(0xFFF28B18).withOpacity(0.28),
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      completedPainter.paint(canvas, offset);
+    }
+
+    final pathPaint = Paint()
+      ..color = const Color(0xFF1E7CF2)
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..strokeWidth = 14
+      ..style = PaintingStyle.stroke;
+
+    for (var i = 0; i < points.length - 1; i++) {
+      final a = points[i];
+      final b = points[i + 1];
+      if (a != null && b != null) {
+        canvas.drawLine(a, b, pathPaint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _TracingBoardPainter oldDelegate) {
+    return oldDelegate.letter != letter ||
+        oldDelegate.points != points ||
+        oldDelegate.completed != completed;
+  }
+}
