@@ -52,3 +52,20 @@ class _LetterTracingScreenState extends State<LetterTracingScreen> {
     super.initState();
     _shuffledLetters = List<String>.from(_letters)..shuffle(_random);
   }
+ void _clearTrace() {
+    setState(() {
+      _points.clear();
+      _completed = false;
+    });
+  }
+
+  void _nextLetter() {
+    setState(() {
+      _points.clear();
+      _completed = false;
+      _currentIndex = (_currentIndex + 1) % _shuffledLetters.length;
+      if (_currentIndex == 0) {
+        _shuffledLetters.shuffle(_random);
+      }
+    });
+  }
