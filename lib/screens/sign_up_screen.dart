@@ -23,10 +23,3 @@ class SignUpScreen extends StatelessWidget {
   }
 }
 
-class _SignUpForm extends StatefulWidget {
-  const _SignUpForm();
-
-  @override
-  State<_SignUpForm> createState() => _SignUpFormState();
-}
-
