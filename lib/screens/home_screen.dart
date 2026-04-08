@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -113,221 +112,224 @@ class HomeScreen extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  const _SectionTitle(
-                                    title: 'Today\'s Adventure',
-                                    subtitle:
-                                        'A simple place to keep learning and playing.',
-                                    color: Color(0xFFFFA62B),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  AppCard(
-                                    gradient: const LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Color(0x33FFC857),
-                                        Color(0x14FF9F1C),
-                                      ],
+                                    const _SectionTitle(
+                                      title: 'Today\'s Adventure',
+                                      subtitle:
+                                          'A simple place to keep learning and playing.',
+                                      color: Color(0xFFFFA62B),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 56,
-                                          height: 56,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFFFFC94A),
-                                            borderRadius:
-                                                BorderRadius.circular(18),
-                                          ),
-                                          child: const Icon(
-                                            Icons.flag_rounded,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 14),
-                                        const Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Daily Challenge',
-                                                style: TextStyle(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.w800,
-                                                  color: Color(0xFF183B74),
-                                                ),
-                                              ),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                'Complete 3 games today!',
-                                                style: TextStyle(
-                                                  color: AppTheme.textMuted,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const Icon(
-                                          Icons.chevron_right_rounded,
-                                          color: Color(0xFFFFA62B),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 26),
-                                  const _SectionTitle(
-                                    title: 'Continue Learning',
-                                    subtitle:
-                                        'Jump back into your next activity.',
-                                    color: Color(0xFF1E7CF2),
-                                  ),
-                                  const SizedBox(height: 14),
-                                  if (continueGame != null)
+                                    const SizedBox(height: 16),
                                     AppCard(
-                                      gradient: continueGame.gradient,
-                                      onTap: () => Navigator.pushNamed(
-                                        context,
-                                        continueGame.route,
+                                      gradient: const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Color(0x33FFC857),
+                                          Color(0x14FF9F1C),
+                                        ],
                                       ),
-                                      padding: const EdgeInsets.all(18),
                                       child: Row(
                                         children: [
                                           Container(
-                                            width: 58,
-                                            height: 58,
+                                            width: 56,
+                                            height: 56,
                                             decoration: BoxDecoration(
-                                              color: const Color(0xFF1E7CF2),
+                                              color: const Color(0xFFFFC94A),
                                               borderRadius:
                                                   BorderRadius.circular(18),
                                             ),
-                                            child: Center(
-                                              child: _GameIcon(
-                                                type: continueGame.type,
-                                                icon: continueGame.icon,
-                                                size: 38,
-                                              ),
+                                            child: const Icon(
+                                              Icons.flag_rounded,
+                                              color: Colors.white,
                                             ),
                                           ),
                                           const SizedBox(width: 14),
-                                          Expanded(
+                                          const Expanded(
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  continueGame.title,
-                                                  style: const TextStyle(
+                                                  'Daily Challenge',
+                                                  style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight: FontWeight.w800,
                                                     color: Color(0xFF183B74),
                                                   ),
                                                 ),
-                                                const SizedBox(height: 4),
+                                                SizedBox(height: 4),
                                                 Text(
-                                                  continueGame.description,
-                                                  style: const TextStyle(
+                                                  'Complete 3 games today!',
+                                                  style: TextStyle(
                                                     color: AppTheme.textMuted,
                                                     fontSize: 13,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 6),
-                                                const Text(
-                                                  'Last played: Today',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF1E7CF2),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w700,
+                                                    fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 18,
-                                              vertical: 10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFF1E7CF2),
-                                              borderRadius:
-                                                  BorderRadius.circular(999),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  color: Color(0x261E7CF2),
-                                                  blurRadius: 10,
-                                                  offset: Offset(0, 5),
-                                                ),
-                                              ],
-                                            ),
-                                            child: const Text(
-                                              'Play',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
+                                          const Icon(
+                                            Icons.chevron_right_rounded,
+                                            color: Color(0xFFFFA62B),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  const SizedBox(height: 26),
-                                  const _SectionTitle(
-                                    title: 'All Games',
-                                    subtitle:
-                                        'Choose a fun adventure and start playing.',
-                                    color: Color(0xFF54B848),
-                                  ),
-                                  const SizedBox(height: 14),
-                                  ...gameCards.map(
-                                    (game) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: _GameAdventureButton(game: game),
+                                    const SizedBox(height: 26),
+                                    const _SectionTitle(
+                                      title: 'Continue Learning',
+                                      subtitle:
+                                          'Jump back into your next activity.',
+                                      color: Color(0xFF1E7CF2),
                                     ),
-                                  ),
-                                  const SizedBox(height: 26),
-                                  const _SectionTitle(
-                                    title: 'Your Progress',
-                                    subtitle:
-                                        'See how well you are doing today.',
-                                    color: Color(0xFFFF5C8A),
-                                  ),
-                                  const SizedBox(height: 14),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: _ProgressTile(
-                                          icon: Icons.emoji_events_rounded,
-                                          color: const Color(0xFF5C6CFF),
-                                          value: gamesPlayed.toString(),
-                                          label: 'Games',
+                                    const SizedBox(height: 14),
+                                    if (continueGame != null)
+                                      AppCard(
+                                        gradient: continueGame.gradient,
+                                        onTap: () => Navigator.pushNamed(
+                                          context,
+                                          continueGame.route,
+                                        ),
+                                        padding: const EdgeInsets.all(18),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 58,
+                                              height: 58,
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF1E7CF2),
+                                                borderRadius:
+                                                    BorderRadius.circular(18),
+                                              ),
+                                              child: Center(
+                                                child: _GameIcon(
+                                                  type: continueGame.type,
+                                                  icon: continueGame.icon,
+                                                  size: 38,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 14),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    continueGame.title,
+                                                    style: const TextStyle(
+                                                      fontSize: 17,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      color: Color(0xFF183B74),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    continueGame.description,
+                                                    style: const TextStyle(
+                                                      color: AppTheme.textMuted,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  const Text(
+                                                    'Last played: Today',
+                                                    style: TextStyle(
+                                                      color: Color(0xFF1E7CF2),
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 18,
+                                                vertical: 10,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF1E7CF2),
+                                                borderRadius:
+                                                    BorderRadius.circular(999),
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    color: Color(0x261E7CF2),
+                                                    blurRadius: 10,
+                                                    offset: Offset(0, 5),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: const Text(
+                                                'Play',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: _ProgressTile(
-                                          icon: Icons.track_changes_rounded,
-                                          color: const Color(0xFF28B5F5),
-                                          value: '$accuracy%',
-                                          label: 'Accuracy',
-                                        ),
+                                    const SizedBox(height: 26),
+                                    const _SectionTitle(
+                                      title: 'All Games',
+                                      subtitle:
+                                          'Choose a fun adventure and start playing.',
+                                      color: Color(0xFF54B848),
+                                    ),
+                                    const SizedBox(height: 14),
+                                    ...gameCards.map(
+                                      (game) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: _GameAdventureButton(game: game),
                                       ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: _ProgressTile(
-                                          icon:
-                                              Icons.local_fire_department_rounded,
-                                          color: const Color(0xFFFFA62B),
-                                          value: bestStreak.toString(),
-                                          label: 'Best Streak',
+                                    ),
+                                    const SizedBox(height: 26),
+                                    const _SectionTitle(
+                                      title: 'Your Progress',
+                                      subtitle:
+                                          'See how well you are doing today.',
+                                      color: Color(0xFFFF5C8A),
+                                    ),
+                                    const SizedBox(height: 14),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: _ProgressTile(
+                                            icon: Icons.emoji_events_rounded,
+                                            color: const Color(0xFF5C6CFF),
+                                            value: gamesPlayed.toString(),
+                                            label: 'Games',
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 18),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: _ProgressTile(
+                                            icon: Icons.track_changes_rounded,
+                                            color: const Color(0xFF28B5F5),
+                                            value: '$accuracy%',
+                                            label: 'Accuracy',
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: _ProgressTile(
+                                            icon: Icons
+                                                .local_fire_department_rounded,
+                                            color: const Color(0xFFFFA62B),
+                                            value: bestStreak.toString(),
+                                            label: 'Best Streak',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 18),
                                   ],
                                 ),
                               ),

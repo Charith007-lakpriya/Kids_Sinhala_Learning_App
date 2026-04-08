@@ -55,14 +55,14 @@ class _MainShellState extends State<MainShell> {
                 ),
               ],
             ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: BottomNavigationBar(
-                  currentIndex: _currentIndex,
-                  onTap: (value) {
-                    SoundService.playTap();
-                    setState(() => _currentIndex = value);
-                  },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: BottomNavigationBar(
+                currentIndex: _currentIndex,
+                onTap: (value) {
+                  SoundService.playTap();
+                  setState(() => _currentIndex = value);
+                },
                 type: BottomNavigationBarType.fixed,
                 selectedItemColor: AppTheme.primary,
                 unselectedItemColor: AppTheme.textMuted,
