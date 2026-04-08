@@ -446,6 +446,136 @@ class _StatTile extends StatelessWidget {
   }
 }
 
+class _PicturePromptCard extends StatelessWidget {
+  final _QuizItem item;
+
+  const _PicturePromptCard({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFFFF3D8),
+            Color(0xFFFFFBF3),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: const Color(0xFFFFD884), width: 1.6),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF355CF3),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: const Text(
+              'Which Word Is Correct?',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            item.picture,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 92, height: 1),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            item.prompt,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0xFF183B74),
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AnswerButton extends StatelessWidget {
+  final String label;
+  final List<Color> colors;
+  final VoidCallback onTap;
+
+  const _AnswerButton({
+    required this.label,
+    required this.colors,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Ink(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: colors,
+            ),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x18000000),
+                blurRadius: 16,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.22),
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.touch_app_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _QuizItem {
   final String picture;
   final String prompt;
@@ -551,6 +681,10 @@ const List<_QuizItem> _quizItems = [
   ),
 ];
 
-
-
+const List<List<Color>> _answerColors = [
+  [Color(0xFF4A9DFF), Color(0xFF5F72FF)],
+  [Color(0xFFFFB648), Color(0xFFFF8D5B)],
+  [Color(0xFF4ACB74), Color(0xFF23B48B)],
+  [Color(0xFFFF7BA5), Color(0xFFFFA75D)],
+];
 
