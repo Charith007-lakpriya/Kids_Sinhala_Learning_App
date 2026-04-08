@@ -6,6 +6,349 @@ import '../theme/app_theme.dart';
 import '../widgets/app_card.dart';
 import '../widgets/auth_playful_widgets.dart';
 
+class HomeScreen extends StatelessWidget {
+  static const routeName = '/home';
+
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final uid = Session.currentUserId ?? 'demo';
+    final userDoc =
+        FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
+    final progressDoc = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('progress')
+        .doc('overview')
+        .snapshots();
+    final gamesDoc = FirebaseFirestore.instance.collection('games').snapshots();
+
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      stream: userDoc,
+      builder: (context, userSnap) {
+        final userData = userSnap.data?.data() ?? {};
+        final username = (userData['name'] ?? 'Learner').toString();
+        final avatarAsset =
+            (userData['avatarAsset'] ?? 'assets/avatars/avatar_0_0.png')
+                .toString();
+        final avatarEmoji = (userData['avatarEmoji'] ?? '🐘').toString();
+        final stars = (userData['stars'] ?? 0) as int? ?? 0;
+        final streak = (userData['streak'] ?? 0) as int? ?? 0;
+        final level = (userData['level'] ?? 1) as int? ?? 1;
+        final bestStreak = (userData['bestStreak'] ?? 0) as int? ?? 0;
+        final levelProgress = (stars % 20) / 20;
+
+        return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+          stream: progressDoc,
+          builder: (context, progressSnap) {
+            final progress = progressSnap.data?.data() ?? {};
+            final gamesPlayed = (progress['gamesPlayed'] ?? 0) as int? ?? 0;
+            final accuracy = (progress['accuracy'] ?? 0) as int? ?? 0;
+
+            return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: gamesDoc,
+              builder: (context, gamesSnap) {
+                final docs = gamesSnap.data?.docs ?? [];
+                final gameCards = docs.map((doc) {
+                  final data = doc.data();
+                  final type = (data['type'] ?? '').toString();
+                  return _GameCardData(
+                    title: (data['title'] ?? 'Game').toString(),
+                    description:
+                        (data['description'] ?? 'Practice and play').toString(),
+                    icon: (data['icon'] ?? _emojiForType(type)).toString(),
+                    type: type,
+                    gradient: _gradientForType(type),
+                    route: _routeForType(type),
+                    accent: _accentForType(type),
+                    softColor: _softColorForType(type),
+                  );
+                }).toList();
+
+                final continueGame =
+                    gameCards.isNotEmpty ? gameCards.first : null;
+
+                return Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: AuthSkyBackground(
+                    child: SafeArea(
+                      bottom: false,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                20,
+                                18,
+                                20,
+                                18,
+                              ),
+                              child: _HeroHeader(
+                                username: username,
+                                avatarAsset: avatarAsset,
+                                avatarEmoji: avatarEmoji,
+                                stars: stars,
+                                streak: streak,
+                                level: level,
+                                levelProgress: levelProgress,
+                              ),
+                            ),
+                            AuthPanel(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Color(0xFFFDFEFF),
+                                      Color(0xFFF4FBFF),
+                                      Color(0xFFFFF8EC),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(28),
+                                ),
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const _SectionTitle(
+                                      title: 'Today\'s Adventure',
+                                      subtitle:
+                                          'A simple place to keep learning and playing.',
+                                      color: Color(0xFFFFA62B),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    AppCard(
+                                      gradient: const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Color(0x33FFC857),
+                                          Color(0x14FF9F1C),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 56,
+                                            height: 56,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFFFC94A),
+                                              borderRadius:
+                                                  BorderRadius.circular(18),
+                                            ),
+                                            child: const Icon(
+                                              Icons.flag_rounded,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 14),
+                                          const Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Daily Challenge',
+                                                  style: TextStyle(
+                                                    fontSize: 17,
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Color(0xFF183B74),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  'Complete 3 games today!',
+                                                  style: TextStyle(
+                                                    color: AppTheme.textMuted,
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const Icon(
+                                            Icons.chevron_right_rounded,
+                                            color: Color(0xFFFFA62B),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 26),
+                                    const _SectionTitle(
+                                      title: 'Continue Learning',
+                                      subtitle:
+                                          'Jump back into your next activity.',
+                                      color: Color(0xFF1E7CF2),
+                                    ),
+                                    const SizedBox(height: 14),
+                                    if (continueGame != null)
+                                      AppCard(
+                                        gradient: continueGame.gradient,
+                                        onTap: () => Navigator.pushNamed(
+                                          context,
+                                          continueGame.route,
+                                        ),
+                                        padding: const EdgeInsets.all(18),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 58,
+                                              height: 58,
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF1E7CF2),
+                                                borderRadius:
+                                                    BorderRadius.circular(18),
+                                              ),
+                                              child: Center(
+                                                child: _GameIcon(
+                                                  type: continueGame.type,
+                                                  icon: continueGame.icon,
+                                                  size: 38,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 14),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    continueGame.title,
+                                                    style: const TextStyle(
+                                                      fontSize: 17,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      color: Color(0xFF183B74),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    continueGame.description,
+                                                    style: const TextStyle(
+                                                      color: AppTheme.textMuted,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  const Text(
+                                                    'Last played: Today',
+                                                    style: TextStyle(
+                                                      color: Color(0xFF1E7CF2),
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 18,
+                                                vertical: 10,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF1E7CF2),
+                                                borderRadius:
+                                                    BorderRadius.circular(999),
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    color: Color(0x261E7CF2),
+                                                    blurRadius: 10,
+                                                    offset: Offset(0, 5),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: const Text(
+                                                'Play',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    const SizedBox(height: 26),
+                                    const _SectionTitle(
+                                      title: 'All Games',
+                                      subtitle:
+                                          'Choose a fun adventure and start playing.',
+                                      color: Color(0xFF54B848),
+                                    ),
+                                    const SizedBox(height: 14),
+                                    ...gameCards.map(
+                                      (game) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: _GameAdventureButton(game: game),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 26),
+                                    const _SectionTitle(
+                                      title: 'Your Progress',
+                                      subtitle:
+                                          'See how well you are doing today.',
+                                      color: Color(0xFFFF5C8A),
+                                    ),
+                                    const SizedBox(height: 14),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: _ProgressTile(
+                                            icon: Icons.emoji_events_rounded,
+                                            color: const Color(0xFF5C6CFF),
+                                            value: gamesPlayed.toString(),
+                                            label: 'Games',
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: _ProgressTile(
+                                            icon: Icons.track_changes_rounded,
+                                            color: const Color(0xFF28B5F5),
+                                            value: '$accuracy%',
+                                            label: 'Accuracy',
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: _ProgressTile(
+                                            icon: Icons
+                                                .local_fire_department_rounded,
+                                            color: const Color(0xFFFFA62B),
+                                            value: bestStreak.toString(),
+                                            label: 'Best Streak',
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 18),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
 LinearGradient _gradientForType(String type) {
   switch (type) {
     case 'match':
@@ -320,6 +663,70 @@ class _HeroHeader extends StatelessWidget {
   }
 }
 
+class _SectionTitle extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final Color color;
+
+  const _SectionTitle({
+    required this.title,
+    required this.subtitle,
+    this.color = const Color(0xFF1E7CF2),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0.96, end: 1),
+          duration: const Duration(milliseconds: 450),
+          curve: Curves.easeOutBack,
+          builder: (context, value, child) {
+            return Transform.scale(
+              scale: value,
+              alignment: Alignment.centerLeft,
+              child: child,
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(999),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.28),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          subtitle,
+          style: const TextStyle(
+            color: Color(0xFF59708E),
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _StatPill extends StatelessWidget {
   final IconData icon;
   final String value;
@@ -401,6 +808,123 @@ class _StatPill extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _ProgressTile extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String value;
+  final String label;
+
+  const _ProgressTile({
+    required this.icon,
+    required this.color,
+    required this.value,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.97, end: 1),
+      duration: const Duration(milliseconds: 420),
+      curve: Curves.easeOutBack,
+      builder: (context, value, child) {
+        return Transform.scale(scale: value, child: child);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              color.withOpacity(0.98),
+              Color.alphaBlend(Colors.white.withOpacity(0.12), color),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(26),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.28),
+              blurRadius: 14,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: -2,
+              right: -2,
+              child: Container(
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.18),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 8,
+              left: -4,
+              child: Container(
+                width: 14,
+                height: 14,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.14),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(icon, color: color, size: 26),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: color,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
