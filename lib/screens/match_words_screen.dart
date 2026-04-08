@@ -112,3 +112,124 @@ class _MatchWordsGameState extends State<_MatchWordsGame> {
       }
     });
   }
+ @override
+  Widget build(BuildContext context) {
+    final hasItems = _items.isNotEmpty;
+    final current = hasItems ? _items[_order[_orderIndex]] : null;
+    final choices = current == null ? const <String>[] : _buildChoices(current);
+
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: AuthSkyBackground(
+        child: SafeArea(
+          bottom: false,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(18, 16, 18, 20),
+            child: Column(
+              children: [
+                const _MatchHeroCard(),
+                const SizedBox(height: 18),
+                AuthPanel(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFFFFFEFF),
+                          Color(0xFFF2FBFF),
+                          Color(0xFFFFF7E9),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const _SectionBadge(
+                          label: 'Match Words',
+                          color: Color(0xFF34B76B),
+                        ),
+                        const SizedBox(height: 10),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 4),
+                          child: Text(
+                            'Read the word and tap the correct picture',
+                            style: TextStyle(
+                              color: Color(0xFF6A6C88),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _MatchStats(
+                          score: _score,
+                          feedback: _feedback,
+                          total: _items.length,
+                        ),
+                        const SizedBox(height: 16),
+                        if (!hasItems)
+                          const _EmptyStateCard()
+                        else ...[
+                          _WordPromptCard(word: current!.word),
+                          const SizedBox(height: 16),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 14,
+                              mainAxisSpacing: 14,
+                              childAspectRatio: 0.95,
+                            ),
+                            itemCount: choices.length,
+                            itemBuilder: (context, index) {
+                              return _ChoiceCard(
+                                emoji: choices[index],
+                                colors: _cardColors[index % _cardColors.length],
+                                onTap: () => _pick(choices[index]),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 14),
+                          Center(
+                            child: Text(
+                              _isLocked ? 'Next word is coming...' : 'Tap the matching picture',
+                              style: const TextStyle(
+                                color: AppTheme.textMuted,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<String> _buildChoices(_MatchItem current) {
+    final pool = _items.where((item) => item.emoji != current.emoji).toList()..shuffle();
+    final distractors = pool.take(pool.length >= 3 ? 3 : pool.length).toList();
+    while (distractors.length < 3) {
+      distractors.add(current);
+    }
+
+    return <String>[
+      current.emoji,
+      distractors[0].emoji,
+      distractors[1].emoji,
+      distractors[2].emoji,
+    ]..shuffle();
+  }
+}
