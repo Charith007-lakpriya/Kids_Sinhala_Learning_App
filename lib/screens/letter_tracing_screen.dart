@@ -151,3 +151,167 @@ SoundService.playCorrect();
     _nextLetter();
     setState(() => _busy = false);
   }
+ @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: AuthSkyBackground(
+        child: SafeArea(
+          bottom: false,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(18, 16, 18, 20),
+            child: Column(
+              children: [
+                const _TracingHeroCard(),
+                const SizedBox(height: 18),
+                AuthPanel(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFFFFFEFF),
+                          Color(0xFFF4FBFF),
+                          Color(0xFFFFF8EC),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const _SectionBadge(
+                          label: 'Letter Tracing',
+                          color: Color(0xFFF28B18),
+                        ),
+                        const SizedBox(height: 10),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 4),
+                          child: Text(
+                            'Trace the dotted Sinhala letter with your finger',
+                            style: TextStyle(
+                              color: Color(0xFF6A6C88),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _TracingStats(letter: _currentLetter),
+                        const SizedBox(height: 16),
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final boardSize = Size(
+                              constraints.maxWidth,
+                              constraints.maxWidth,
+                            );
+                            return Container(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Color(0xFFFFF2D8),
+                                    Color(0xFFFFFBF3),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0x14000000),
+                                    blurRadius: 16,
+                                    offset: Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(18, 18, 18, 8),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 14,
+                                            vertical: 8,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFF28B18),
+                                            borderRadius:
+                                                BorderRadius.circular(999),
+                                          ),
+                                          child: Text(
+                                            _currentLetter,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        TextButton(
+                                          onPressed: _clearTrace,
+                                          child: const Text(
+                                            'Clear',
+                                            style: TextStyle(
+                                              color: Color(0xFFF28B18),
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(26),
+                                        child: GestureDetector(
+                                          onPanStart: (details) {
+                                            setState(() {
+                                              _points.add(details.localPosition);
+                                            });
+                                          },
+                                          onPanUpdate: (details) {
+                                            setState(() {
+                                              _points.add(details.localPosition);
+                                            });
+                                          },
+                                          onPanEnd: (_) {
+                                            setState(() => _points.add(null));
+                                            _handleTraceEnd(boardSize);
+                                          },
+                                          child: CustomPaint(
+                                            painter: _TracingBoardPainter(
+                                              letter: _currentLetter,
+                                              points: _points,
+                                              completed: _completed,
+                                            ),
+                                            child: const SizedBox.expand(),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
